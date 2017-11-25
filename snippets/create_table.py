@@ -1,3 +1,4 @@
+import os
 import tables as tb
 
 
@@ -24,7 +25,10 @@ def fill_table(table, num_records):
 
 
 def main():
-    with tb.open_file('pytables-tables.h5', 'w') as hdf:
+    here = os.path.abspath(os.path.dirname(__file__))
+    data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
+    file_path = os.path.join(data_dir, 'pytables-tables.h5')
+    with tb.open_file(file_path, 'w') as hdf:
         group0 = hdf.create_group(where=hdf.root, name='group0')
         group1 = hdf.create_group(where='/', name='group1')
         table0 = hdf.create_table(group0, 'table0', description=Particle)

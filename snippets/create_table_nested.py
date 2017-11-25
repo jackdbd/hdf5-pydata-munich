@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import tables as tb
 
@@ -50,7 +51,10 @@ def fill_table(table, num_records):
 
 
 def main():
-    with tb.open_file('pytables-tables-nested.h5', 'w') as hdf:
+    here = os.path.abspath(os.path.dirname(__file__))
+    data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
+    file_path = os.path.join(data_dir, 'pytables-tables-nested.h5')
+    with tb.open_file(file_path, 'w') as hdf:
         my_table = hdf.create_table('/', 'my_table', description=Particle)
         fill_table(my_table, 100)
 
