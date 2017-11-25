@@ -1,0 +1,11 @@
+cycler==0.10.0
+h5py==2.7.1
+matplotlib==2.1.0
+numexpr==2.6.4
+numpy==1.13.3
+pandas==0.21.0
+pyparsing==2.2.0
+python-dateutil==2.6.1
+pytz==2017.3
+six==1.11.0
+tables==3.4.2
