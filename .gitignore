@@ -1,2 +1,8 @@
 # HDF5 files
 *.h5
+
+# jupyter notebooks
+.ipynb_checkpoints/
+
+# pycharm
+.idea/
