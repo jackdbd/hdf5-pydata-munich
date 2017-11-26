@@ -1,5 +1,6 @@
-# HDF5 files
+# Data files
 *.h5
+*.csv
 
 # jupyter notebooks
 .ipynb_checkpoints/
