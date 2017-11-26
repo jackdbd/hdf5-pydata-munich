@@ -17,7 +17,7 @@ def main():
     # SQLite DB
     # http://pythondata.com/dask-large-csv-python/
     # http://pythondata.wpengine.com/working-large-csv-files-python/
-    # file_path = os.path.join(data_dir, 'yellow_tripdata_2016-01.csv')
+    file_path = os.path.join(data_dir, 'yellow_tripdata_2016-08.csv')
     t0 = time.time()
     # http://tomaugspurger.github.io/scalable-ml-01.html
     df = pd.read_csv(
