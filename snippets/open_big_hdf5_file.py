@@ -17,11 +17,11 @@ def main():
         print('Row size: {}'.format(size(table.rowsize)))
 
         # querying with numpy is possible only it the table fits in memory
-        t0 = time.time()
-        results = [x['heart_rate'] for x in table.read()
-                   if 60 < x['heart_rate'] < 70 and 40 < x['hematocrit'] < 60]
-        t1 = time.time()
-        print('Querying with numpy took {:.2f}ms'.format((t1 - t0) * 1000))
+        # t0 = time.time()
+        # results = [x['heart_rate'] for x in table.read()
+        #            if 60 < x['heart_rate'] < 70 and 40 < x['hematocrit'] < 60]
+        # t1 = time.time()
+        # print('Querying with numpy took {:.2f}ms'.format((t1 - t0) * 1000))
 
         # table.iterrows() returns an iterator that iterates over all rows.
         # This allow us to avoid loading the entire table in memory.

@@ -15,7 +15,7 @@ class Patient(tb.IsDescription):
 
     class XRay(tb.IsDescription):
         # 2-D float array (single-precision)
-        data = tb.Float32Col(shape=(256, 256))  # 1024x1024 is too big!256
+        data = tb.Float32Col(shape=(256, 256))  # 512x512 is too big!
 
 
 def fill_table(table, num_records):
@@ -54,6 +54,7 @@ def main():
     with tb.open_file(file_path, 'w') as hdf:
         num_days = 15
 
+        # this should produce a bit more than 1GB of data at each iteration
         for i in range(num_days):
             group_name = 'Day_{0:03}'.format(i)
             group = hdf.create_group('/', group_name)
