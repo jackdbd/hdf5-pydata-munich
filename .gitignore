@@ -1,6 +1,7 @@
 # Data files
 *.h5
 *.csv
+*.parq
 
 # jupyter notebooks
 .ipynb_checkpoints/
