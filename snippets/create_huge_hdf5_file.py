@@ -7,7 +7,7 @@ import numpy as np
 class Patient(tb.IsDescription):
     identifier = tb.UInt16Col(pos=0)
     age = tb.UInt8Col(pos=1)
-    heart_rate = tb.Float32Col(pos=2)
+    heart_rate = tb.UInt8Col(pos=2)
     diastolic_pressure = tb.Float32Col(pos=3)
     systolic_pressure = tb.Float32Col(pos=4)
     hematocrit = tb.UInt8Col(pos=5)
@@ -25,20 +25,26 @@ def fill_table(table, num_records):
     table.attrs.hematocrit = 'volume percentage'
     table.attrs.blood_sugar = 'mg/dl'
 
-    # reuse the same data for all x rays to save time
-    data = np.random.normal(loc=0, scale=1, size=(256, 256)).astype('float32')
+    # reuse the same data to save time
+    x_ray = np.random.normal(loc=0, scale=1, size=(256, 256)).astype('float32')
+    age = np.random.randint(0, 100, dtype='uint8')
+    heart_rate = np.random.randint(40, 200, dtype='uint8')
+    diastolic_pressure = np.random.uniform(low=60, high=140)
+    systolic_pressure = np.random.uniform(low=80, high=200)
+    hematocrit = np.random.randint(low=30, high=60)
+    blood_sugar = np.random.uniform(low=50, high=150)
 
     # Get the record object associated with the table:
     row = table.row
     for i in range(num_records):
         row['identifier'] = i
-        row['age'] = np.random.randint(0, 100, dtype='uint8')
-        row['heart_rate'] = np.random.random() * 120
-        row['diastolic_pressure'] = np.random.uniform(low=60, high=140)
-        row['systolic_pressure'] = np.random.uniform(low=80, high=200)
-        row['hematocrit'] = np.random.randint(low=30, high=60)
-        row['blood_sugar'] = np.random.uniform(low=50, high=150)
-        row['XRay/data'] = data
+        row['age'] = age
+        row['heart_rate'] = heart_rate
+        row['diastolic_pressure'] = diastolic_pressure
+        row['systolic_pressure'] = systolic_pressure
+        row['hematocrit'] = hematocrit
+        row['blood_sugar'] = blood_sugar
+        row['XRay/data'] = x_ray
         # inject the Record values into the table
         row.append()
     # Flush the table buffers
@@ -48,24 +54,25 @@ def fill_table(table, num_records):
 def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
-    file_path = os.path.join(data_dir, 'big_file.h5')
+    file_path = os.path.join(data_dir, 'pytables-clinical-study.h5')
+    filters = tb.Filters(complevel=5, complib='zlib')
 
     t0 = time.time()
-    with tb.open_file(file_path, 'w') as hdf:
+    with tb.open_file(file_path, 'w') as f:
         num_days = 15
 
         # this should produce a bit more than 1GB of data at each iteration
         for i in range(num_days):
             group_name = 'Day_{0:03}'.format(i)
-            group = hdf.create_group('/', group_name)
+            group = f.create_group('/', group_name)
 
             # define the tables for the study/control group of patients
-            table_study = hdf.create_table(
+            table_study = f.create_table(
                 where=group, name='study', description=Patient,
-                title='Study Group of patients')
-            table_control = hdf.create_table(
+                title='Study Group of patients', filters=filters)
+            table_control = f.create_table(
                 where=group, name='control', description=Patient,
-                title='Control group of patients')
+                title='Control group of patients', filters=filters)
 
             # each day we might have a different number of patients
             num_patients_study = np.random.randint(low=2000, high=2200)
