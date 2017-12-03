@@ -29,11 +29,11 @@ def main():
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
     file_path = os.path.join(data_dir, 'pytables-tables.h5')
 
-    with tb.open_file(file_path, 'w') as hdf:
-        group0 = hdf.create_group(where=hdf.root, name='group0')
-        group1 = hdf.create_group(where='/', name='group1')
-        table0 = hdf.create_table(group0, 'table0', description=Particle)
-        table1 = hdf.create_table('/group1', 'table1', description=Particle)
+    with tb.open_file(file_path, 'w') as f:
+        group0 = f.create_group(where=f.root, name='group0')
+        group1 = f.create_group(where='/', name='group1')
+        table0 = f.create_table(group0, 'table0', description=Particle)
+        table1 = f.create_table('/group1', 'table1', description=Particle)
 
         for table in (table0, table1):
             fill_table(table, 10)

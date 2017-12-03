@@ -9,8 +9,8 @@ def main():
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
     file_path = os.path.join(data_dir, 'pytables-synthetic-data.h5')
 
-    with tb.open_file(file_path, 'r') as hdf:
-        table = hdf.root.data_table
+    with tb.open_file(file_path, 'r') as f:
+        table = f.root.data_table
         print(table)
         print('Table size in memory: {}'.format(size(table.size_in_memory)))
         print('Table size on disk: {}'.format(size(table.size_on_disk)))

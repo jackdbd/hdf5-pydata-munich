@@ -54,8 +54,8 @@ def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
     file_path = os.path.join(data_dir, 'pytables-tables-nested.h5')
-    with tb.open_file(file_path, 'w') as hdf:
-        my_table = hdf.create_table('/', 'my_table', description=Particle)
+    with tb.open_file(file_path, 'w') as f:
+        my_table = f.create_table('/', 'my_table', description=Particle)
         fill_table(my_table, 100)
 
 if __name__ == '__main__':
