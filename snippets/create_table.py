@@ -28,6 +28,7 @@ def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
     file_path = os.path.join(data_dir, 'pytables-tables.h5')
+
     with tb.open_file(file_path, 'w') as hdf:
         group0 = hdf.create_group(where=hdf.root, name='group0')
         group1 = hdf.create_group(where='/', name='group1')
@@ -36,6 +37,7 @@ def main():
 
         for table in (table0, table1):
             fill_table(table, 10)
+
 
 if __name__ == '__main__':
     main()
