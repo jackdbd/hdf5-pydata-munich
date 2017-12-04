@@ -11,3 +11,5 @@
 
 # visual studio code
 .vscode/
+
+snippets/__pycache__/
