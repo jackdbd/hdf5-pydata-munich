@@ -32,16 +32,27 @@ def fill_table(table, mapping, df):
         row['fare_amount'] = df['fare_amount'].values[i]
         row['tip_amount'] = df['tip_amount'].values[i]
         row['total_amount'] = df['total_amount'].values[i]
+
+        row['payment_type'] = df['payment_type'].values[i]
         row.append()
     table.flush()
 
 
-def get_csv_mapping(file_name):
-    """CSV files from different year/month have different field names.
+def get_year_and_month(file_name):
+    # we could also use a regex like '[0-9]){4}-([0-9]){2}\.csv'
+    a, b, c = file_name.split('_')
+    period, extension = c.split('.')
+    year, month = period.split('-')
+    return year, month
+
+
+def get_csv_mapping(year, month):
+    """CSV files from different year/month have some different field names.
 
     Parameters
     ----------
-    fiel_name : str
+    year : int
+    month : int
 
     Returns
     -------
@@ -52,22 +63,21 @@ def get_csv_mapping(file_name):
     data dictionary for NY yellow taxi CSV files
     http://www.nyc.gov/html/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf
     """
-    # we could also use a regex like '[0-9]){4}-([0-9]){2}\.csv'
-    a, b, c = file_name.split('_')
-    period, extension = c.split('.')
-    year, month = period.split('-')
     # To the left, the key we want to use. To the right, the key in the CSV file
     if year == '2014':
         mapping = {
             'vendor_id': 'vendor_id',
             'pickup_datetime': 'pickup_datetime',
             'dropoff_datetime': 'dropoff_datetime',
+            # 'rate_code_id': 'rate_code',
         }
     elif year == '2015' or (year == '2016' and 1 <= int(month) <= 6):
         mapping = {
             'vendor_id': 'VendorID',
             'pickup_datetime': 'tpep_pickup_datetime',
             'dropoff_datetime': 'tpep_dropoff_datetime',
+            # sometimes it's RateCodeID, others RatecodeID...
+            # 'rate_code_id': 'RateCodeID',
         }
     else:
         raise NotImplementedError('data dictionary not defined for this period')
@@ -78,35 +88,35 @@ def get_csv_mapping(file_name):
 def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
-    h5_file_path = os.path.join(data_dir, 'pytables-ny-taxis.h5')
+    h5_file_path = os.path.join(data_dir, 'NYC-yellow-taxis.h5')
     nyc_dir = os.path.join(data_dir, 'nyctaxi')
     years = os.listdir(nyc_dir)
 
     # Open the HDF5 file in 'a'ppend mode and populate the table with CSV data
-    with tb.open_file(h5_file_path, 'a') as f:
-        table = f.root.TaxiTable
-        # or, in alternative
-        # table = list(f.walk_nodes('/', classname='Table'))[0]
-
+    with tb.open_file(filename=h5_file_path, mode='a') as f:
         for year in years:
             year_dir = os.path.join(data_dir, 'nyctaxi', year)
             csv_files = os.listdir(year_dir)
 
             for csv_file in csv_files:
-                mapping = get_csv_mapping(csv_file)
-
+                year, month = get_year_and_month(csv_file)
+                mapping = get_csv_mapping(year, month)
                 # define the dtype to use when reading the CSV with pandas (this
                 # has nothing to do with the HDF5 table)
                 dtype = {
                     mapping['vendor_id']: 'category',
                     'store_and_fwd_flag': 'category',
+                    'payment_type': 'category',
                 }
                 parse_dates = [
                     mapping['pickup_datetime'], mapping['dropoff_datetime']
                 ]
 
+                table_where = '/yellow_{}_{}'.format(year, month)
+                table = f.get_node(where=table_where)
+
                 t0 = time.time()
-                print('Processing {}'.format(csv_file))
+                print('Processing {} started'.format(csv_file))
                 csv_file_path = os.path.join(year_dir, csv_file)
 
                 # read in chunks because these CSV files are too big
@@ -116,10 +126,12 @@ def main():
                     skipinitialspace=True, parse_dates=parse_dates):
                     # print('Processing chunk')
                     df = chunk.reset_index(drop=True)
-                    # for debugging
                     # print(df.describe())
                     # print(df.head())
                     fill_table(table, mapping, df)
+                    # debugging tip: put a break here, so you can inspect what
+                    # has been written in the table
+                    break
                     # print('Next chunk')
 
                 t1 = time.time()
