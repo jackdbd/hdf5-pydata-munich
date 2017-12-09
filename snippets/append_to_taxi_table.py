@@ -124,15 +124,13 @@ def main():
                 for chunk in pd.read_csv(
                     csv_file_path, chunksize=chunksize, dtype=dtype,
                     skipinitialspace=True, parse_dates=parse_dates):
-                    # print('Processing chunk')
                     df = chunk.reset_index(drop=True)
                     # print(df.describe())
                     # print(df.head())
                     fill_table(table, mapping, df)
                     # debugging tip: put a break here, so you can inspect what
                     # has been written in the table
-                    break
-                    # print('Next chunk')
+                    # break
 
                 t1 = time.time()
                 print('Processing {} took {:.2f}s'.format(csv_file, (t1 - t0)))
