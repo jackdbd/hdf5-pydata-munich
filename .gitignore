@@ -3,6 +3,9 @@
 *.csv
 *.parq
 
+# Environment variables
+.env
+
 # jupyter notebooks
 .ipynb_checkpoints/
 
