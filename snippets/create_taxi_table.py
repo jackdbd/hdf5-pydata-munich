@@ -11,23 +11,35 @@ data_dictionary = {
     'vendor_id': 'A code indicating the TPEP provider that provided the record',
     'trip_distance': 'The elapsed trip distance in miles reported by the taximeter',
     'payment_type': 'A numeric code signifying how the passenger paid for the trip',
+    'pickup_latitude': 'Pickup latitude in Mercator projection',
+    'pickup_longitude': 'Pickup longitude in Mercator projection',
+    'dropoff_latitude': 'Dropoff latitude in Mercator projection',
+    'dropoff_longitude': 'Dropoff longitude in Mercator projection',
+    'pickup_x': 'Pickup X location in meters',
+    'pickup_y': 'Pickup Y location in meters',
+    'dropoff_x': 'Dropoff X location in meters',
+    'dropoff_y': 'Dropoff Y location in meters',
 }
 
 
 class TaxiTableDescription(tb.IsDescription):
-    vendor_id = tb.UInt8Col(pos=0) 
-    pickup_timestamp_ms = tb.Int64Col(pos=1)
-    dropoff_timestamp_ms = tb.Int64Col(pos=2)
-    passenger_count = tb.UInt8Col(pos=3)
-    trip_distance = tb.Float32Col(pos=4)
-    pickup_longitude = tb.Float32Col(pos=5)
-    pickup_latitude = tb.Float32Col(pos=6)
-    dropoff_longitude = tb.Float32Col(pos=7)
-    dropoff_latitude = tb.Float32Col(pos=8)
-    fare_amount = tb.Float32Col(pos=9)
-    tip_amount = tb.Float32Col(pos=10)
-    total_amount = tb.Float32Col(pos=11)
-    payment_type = tb.UInt8Col(pos=12)
+    vendor_id = tb.UInt8Col(pos=0)
+    pickup_timestamp_ms = tb.Int64Col()
+    dropoff_timestamp_ms = tb.Int64Col()
+    passenger_count = tb.UInt8Col()
+    trip_distance = tb.Float32Col()
+    pickup_latitude = tb.Float32Col()
+    pickup_longitude = tb.Float32Col()
+    dropoff_latitude = tb.Float32Col()
+    dropoff_longitude = tb.Float32Col()
+    pickup_x = tb.Float32Col()
+    pickup_y = tb.Float32Col()
+    dropoff_x = tb.Float32Col()
+    dropoff_y = tb.Float32Col()
+    fare_amount = tb.Float32Col()
+    tip_amount = tb.Float32Col()
+    total_amount = tb.Float32Col()
+    payment_type = tb.UInt8Col()
     # rate_code_id = tb.UInt8Col(pos=13)
 
 

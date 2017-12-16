@@ -1,13 +1,23 @@
 import os
 import time
-import tables as tb
+import numpy as np
 import pandas as pd
+import tables as tb
 
 
 def date_to_timestamp_ms(date_obj):
     timestamp_in_nanoseconds = date_obj.astype('int64')
     timestamp_in_ms = (timestamp_in_nanoseconds / 1000000).astype('int64')
     return timestamp_in_ms
+
+def latitude_longitude_to_meters(lat, lng):
+    # https://github.com/bokeh/datashader/blob/master/examples/taxi_preprocessing_example.py
+    radius_of_earth = 6378137  # in meters
+    origin_shift = 2 * np.pi * radius_of_earth / 2.0
+    mx = lng * origin_shift / 180.0
+    my = np.log(np.tan((90 + lat) * np.pi / 360.0)) / (np.pi / 180.0)
+    my = my * origin_shift / 180.0
+    return mx, my
 
 
 def fill_table(table, mapping, df):
@@ -28,6 +38,11 @@ def fill_table(table, mapping, df):
         row['pickup_latitude'] = df['pickup_latitude'].values[i]
         row['dropoff_longitude'] = df['dropoff_longitude'].values[i]
         row['dropoff_latitude'] = df['dropoff_latitude'].values[i]
+
+        row['pickup_x'], row['pickup_y'] = latitude_longitude_to_meters(
+            df['pickup_latitude'].values[i], df['pickup_longitude'].values[i])
+        row['dropoff_x'], row['dropoff_y'] = latitude_longitude_to_meters(
+            df['dropoff_latitude'].values[i], df['dropoff_longitude'].values[i])
 
         row['fare_amount'] = df['fare_amount'].values[i]
         row['tip_amount'] = df['tip_amount'].values[i]
