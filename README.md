@@ -4,6 +4,8 @@ Introduction to HDF5 in Python.
 
 ![An image showing a subset of pickup locations of New York City yellow taxis during January 2015](https://github.com/jackdbd/hdf5-pydata-munich/blob/master/img/nyc-yellow-taxis-pickups.png "A subset of pickup locations of New York City yellow taxis during January 2015")
 
+If you are just curious and want to have a look at the notebook without installing anything, go to [http://nbviewer.jupyter.org/](http://nbviewer.jupyter.org/) and type `jackdbd/hdf5-pydata-munich` in the search bar.
+
 
 ### Installation
 
