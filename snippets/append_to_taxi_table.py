@@ -103,7 +103,7 @@ def get_csv_mapping(year, month):
 def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
-    h5_file_path = os.path.join(data_dir, 'NYC-yellow-taxis.h5')
+    h5_file_path = os.path.join(data_dir, 'NYC-yellow-taxis-10k.h5')
     nyc_dir = os.path.join(data_dir, 'nyctaxi')
     years = os.listdir(nyc_dir)
 
@@ -145,7 +145,7 @@ def main():
                     fill_table(table, mapping, df)
                     # debugging tip: put a break here, so you can inspect what
                     # has been written in the table
-                    # break
+                    break
 
                 t1 = time.time()
                 print('Processing {} took {:.2f}s'.format(csv_file, (t1 - t0)))

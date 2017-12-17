@@ -46,7 +46,7 @@ class TaxiTableDescription(tb.IsDescription):
 def main():
     here = os.path.abspath(os.path.dirname(__file__))
     data_dir = os.path.abspath(os.path.join(here, '..', 'data'))
-    h5_file_path = os.path.join(data_dir, 'NYC-yellow-taxis.h5')
+    h5_file_path = os.path.join(data_dir, 'NYC-yellow-taxis-10k.h5')
     nyc_dir = os.path.join(data_dir, 'nyctaxi')
     years = os.listdir(nyc_dir)
     months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
