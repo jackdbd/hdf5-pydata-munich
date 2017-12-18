@@ -3,6 +3,9 @@
 *.csv
 *.parq
 
+# unignore the placeholder CSV file
+!/data/nyctaxi/2015/nyc-taxi-dataset-csv-files-here.csv
+
 # Environment variables
 .env
 
