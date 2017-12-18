@@ -59,7 +59,7 @@ def main():
 
     t0 = time.time()
     with tb.open_file(file_path, 'w') as f:
-        num_days = 15
+        num_days = 5
 
         # this should produce a bit more than 1GB of data at each iteration
         for i in range(num_days):
